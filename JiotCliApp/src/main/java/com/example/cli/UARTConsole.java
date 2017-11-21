@@ -1,5 +1,6 @@
 package com.example.cli;
 
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -8,6 +9,9 @@ import java.io.OutputStreamWriter;
 import java.nio.channels.Channels;
 import java.util.Observable;
 import java.util.Observer;
+
+import com.example.thing.ControlPoint;
+
 import jdk.dio.DeviceManager;
 import jdk.dio.uart.UART;
 import jdk.dio.uart.UARTConfig;
@@ -56,19 +60,17 @@ public class UARTConsole implements Observer{
 
     @Override
     public void update(Observable ob, Object arg) {
-        if(ob instanceof Point){
-            Point point = (Point) ob;
+        if(ob instanceof ControlPoint){
+        	ControlPoint point = (ControlPoint) ob;
             if(arg == null){
                 write("Changed of value (" + point.getName() + "): "
                     + point.getPresentValue());
             }else{
-                switch(arg.toString()){
-                    case "name" : 
-                        write("Changed name (" + point.getName() + "): "
-                            + point.getName());
-                        break;
-                    default :
-                        write("Changed (" + point.getName() + "): " + arg);
+                if (arg.toString().equals("name")) {
+                		write("Changed name (" + point.getName() + "): " + point.getName());
+                }
+                else {
+                		write("Changed (" + point.getName() + "): " + arg);
                 }
             }
         }
