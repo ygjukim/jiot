@@ -1,0 +1,60 @@
+package com.example.thing;
+
+import java.util.Observable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public abstract class ControlPoint extends Observable {
+	public static enum Type {
+		DI, DO, TDO, AI, AO
+	};
+	
+	protected static final ScheduledExecutorService POLLING = 
+			Executors.newSingleThreadScheduledExecutor();
+	private static final AtomicInteger COUNT = new AtomicInteger(0);
+
+	private int id;
+	private String name;
+	protected AtomicInteger presentValue = new AtomicInteger();
+	
+	public ControlPoint() {
+		id = COUNT.getAndIncrement();
+		name = getClass().getName() + "-" + id;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getPresentValue() {
+		return presentValue.get();
+	}
+
+	protected void fireChanged() {
+		setChanged();
+		notifyObservers();
+	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return getName() + "(" + getId() + ") [type=" + getType() + ", enabled=" + isEnabled() + "]";
+	}
+	
+	public abstract void open();
+	
+	public abstract void close();
+	
+	public abstract boolean isEnabled();
+	
+	public abstract Type getType();	
+}
