@@ -16,7 +16,7 @@ public abstract class ControlPoint extends Observable {
 
 	private int id;
 	private String name;
-	protected AtomicInteger presentValue = new AtomicInteger();
+	protected AtomicInteger presentValue = new AtomicInteger(0);
 	
 	public ControlPoint() {
 		id = COUNT.getAndIncrement();
@@ -33,6 +33,7 @@ public abstract class ControlPoint extends Observable {
 
 	public void setName(String name) {
 		this.name = name;
+		fireChanged("name");
 	}
 
 	public int getPresentValue() {
@@ -44,6 +45,11 @@ public abstract class ControlPoint extends Observable {
 		notifyObservers();
 	}
 
+	protected void fireChanged(Object arg) {
+		setChanged();
+		notifyObservers(arg);
+	}
+	
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub

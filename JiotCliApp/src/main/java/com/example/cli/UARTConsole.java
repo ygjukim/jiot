@@ -1,6 +1,5 @@
 package com.example.cli;
 
-import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -16,24 +15,26 @@ import jdk.dio.DeviceManager;
 import jdk.dio.uart.UART;
 import jdk.dio.uart.UARTConfig;
 
-public class UARTConsole implements Observer{
+public class UARTConsole implements Observer {
 
-    private UART uart;
+    private UART uart = null;
     private BufferedReader in;
     private BufferedWriter out;
 
     public UARTConsole(UARTConfig config) throws IOException {
+/*    	
         uart = (UART) DeviceManager.open(config);
-        in = new BufferedReader(new InputStreamReader(
-                Channels.newInputStream(uart)));
-        out = new BufferedWriter(new OutputStreamWriter(
-                Channels.newOutputStream(uart)));
-        uart.setReceiveTimeout(100);
+        in = new BufferedReader(Channels.newReader(uart, "UTF-8"));
+        out = new BufferedWriter(Channels.newWriter(uart, "UTF-8"));
+        uart.setReceiveTimeout(100);        
+*/
+        in = new BufferedReader(new InputStreamReader(System.in));
+        out = new BufferedWriter(new OutputStreamWriter(System.out));
     }
 
     public void run() throws IOException {
         System.out.println("Waiting command...");
-        write("Please input command:");
+        write("Please input command: ");
         
         for (String line = in.readLine();
                 line == null || !line.equals("quit");
@@ -63,14 +64,14 @@ public class UARTConsole implements Observer{
         if(ob instanceof ControlPoint){
         	ControlPoint point = (ControlPoint) ob;
             if(arg == null){
-                write("Changed of value (" + point.getName() + "): "
+                write("[Observer] Changed value (" + point.getName() + "): "
                     + point.getPresentValue());
             }else{
                 if (arg.toString().equals("name")) {
-                		write("Changed name (" + point.getName() + "): " + point.getName());
+                		write("[Observer] Changed name (" + point.getName() + "): " + point.getName());
                 }
                 else {
-                		write("Changed (" + point.getName() + "): " + arg);
+                		write("[Observer] Changed (" + point.getName() + "): " + arg);
                 }
             }
         }
@@ -78,7 +79,7 @@ public class UARTConsole implements Observer{
 
     private void write(String result) {
         try {
-            out.write(result);
+            out.write("Console >> " + result);
             out.newLine();
             out.flush();
         } catch (IOException ex) {
@@ -89,6 +90,6 @@ public class UARTConsole implements Observer{
     private void close() throws IOException {
         in.close();
         out.close();
-        uart.close();
+        if (uart != null) uart.close();
     }
 }

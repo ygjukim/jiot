@@ -10,7 +10,7 @@ import jdk.dio.UnavailableDeviceException;
 import jdk.dio.UnsupportedDeviceTypeException;
 import jdk.dio.gpio.GPIOPin;
 
-public class AsyncToggleOutputPoint extends OutputControlPoint {
+public class AsyncToggleOutputPoint extends OutputControlPoint implements CommandExecutable {
 	private int pinId;
 	private GPIOPin pinDev;
 	
@@ -36,7 +36,7 @@ public class AsyncToggleOutputPoint extends OutputControlPoint {
 		}
 	}
 
-	void setInterval(int interval) {
+	public void setInterval(int interval) {
 		this.interval = interval;
 	}
 	
@@ -146,7 +146,21 @@ public class AsyncToggleOutputPoint extends OutputControlPoint {
 	@Override
 	public void setPresentValue(int value) {
 		bToggle = (value == 1);
+		if (bToggle) {	// start toggling
+			toggleSem.release();
+		}
 		presentValue.set(value);
+	}
+
+	@Override
+	public int executeCommmad(String[] command) {
+		if (command.length >= 2) {
+			if (command[0] != null && command[0].equals("interval")) {
+				setInterval(Integer.parseInt(command[1]));
+				return Integer.parseInt(command[1]);
+			}
+		}
+		return 0;
 	}
 
 }

@@ -1,11 +1,14 @@
 package com.example.cli;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
+import com.example.thing.CommandExecutable;
 import com.example.thing.ControlPoint;
 import com.example.thing.ControlPointContainer;
 import com.example.thing.OutputControlPoint;
@@ -36,6 +39,7 @@ public class Commander {
                 StringBuilder sb = new StringBuilder();
                 Collection<ControlPoint> points
                         = ControlPointContainer.getInstance().getControlPoints();
+                sb.append("ControlPointContainer has " + points.size() +"'s control points.");
                 for (ControlPoint point : points) {
                     sb.append(point.toString())
                             .append(System.lineSeparator());
@@ -46,7 +50,7 @@ public class Commander {
 
             @Override
             public String getHelp() {
-                return "list: display list for control points";
+                return "list: display a list for control points";
              }
          });
 
@@ -127,6 +131,34 @@ public class Commander {
                         + "-> rename [point id] [new name]";
              }
          });
+        
+        commands.put("exec", new Command() {
+            @Override
+            public String execute(String[] command) {
+                if (command.length < 3) {
+                    return "Invalid exec command";
+                } else {
+                    int pointId = Integer.parseInt(command[1]);
+                    ControlPoint point
+                            = ControlPointContainer.getInstance().getControlPoint(pointId);
+                    if (point == null) {
+                        return "Cannot find a point(" + pointId + ")";
+                    } else if (point instanceof CommandExecutable) {
+                    		String[] subCommand = Arrays.copyOfRange(command, 2, command.length);
+                    		int value = ((CommandExecutable)point).executeCommmad(subCommand);
+                        return String.valueOf(value);
+                    } else {
+                        return "It is not a command-executable point(" + pointId + ")";
+                    }
+                }
+             }
+            
+            @Override
+            public String getHelp() {
+                return "exec: execute extended command for control point. format"
+                        + "-> exec [point id] [command] [value] ...";
+             }
+         });        
      }
 
     public String execute(String[] command) throws IOException {
