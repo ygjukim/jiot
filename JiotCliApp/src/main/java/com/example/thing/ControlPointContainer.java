@@ -38,13 +38,14 @@ public class ControlPointContainer {
 		
 		point = new GPIOPinControlPoint(24);
 		putControlPoint(point);
-		
+/*		
 		for (int id=0; id<5; id++) {
 			point = new PCF8591AnalogIOPoint(id);
 			putControlPoint(point);
 		}		
 		point = new GPIOPinControlPoint(23);		// Alert
 		putControlPoint(point);
+*/
 	}
 
 	public void start() {

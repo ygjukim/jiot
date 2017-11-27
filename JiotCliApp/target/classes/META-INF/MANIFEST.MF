@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-Built-By: yjkim
+Built-By: comit1234
 Class-Path: lib/spring-context-3.2.3.RELEASE.jar lib/spring-aop-3.2.3.
  RELEASE.jar lib/spring-beans-3.2.3.RELEASE.jar lib/spring-core-3.2.3.
  RELEASE.jar lib/commons-logging-1.1.1.jar lib/spring-expression-3.2.3

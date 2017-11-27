@@ -53,6 +53,8 @@ public class UARTConsole implements Observer {
             
             if(result != null)
                 write(result);
+            else 
+            	write("");
         }
 
         write("Good bye!");
@@ -79,8 +81,9 @@ public class UARTConsole implements Observer {
 
     private void write(String result) {
         try {
-            out.write("Console >> " + result);
+            out.write(result);
             out.newLine();
+            out.write("Console >> ");
             out.flush();
         } catch (IOException ex) {
 
