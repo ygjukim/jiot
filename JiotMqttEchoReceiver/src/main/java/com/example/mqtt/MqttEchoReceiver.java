@@ -5,7 +5,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.logging.Level;
+import java.util.Scanner;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -22,7 +22,7 @@ import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 import org.jboss.logging.Logger;
 
 public class MqttEchoReceiver {
-	public  static final String TOPIC_PREFIX = "jiot/mqtt";
+	public  static final String TOPIC_PREFIX = "jiot/mqtt/";
 	public static final String TOPIC_ECHO = TOPIC_PREFIX + "+/echo";
 	public static final String TOPIC_RESPONSE = TOPIC_PREFIX + "%s/response";
 	
@@ -32,8 +32,8 @@ public class MqttEchoReceiver {
 	
 	public MqttEchoReceiver() throws SocketException, MqttException {
 		uri = System.getProperty("mqtt.server", "tcp://localhost:1883");
-		String ipAddress = getLocalIPAddress();		
-		System.out.println("Used IP address: " + ipAddress);
+//		String ipAddress = getLocalIPAddress();		
+//		System.out.println("Used IP address: " + ipAddress);
 //		clientId = ipAddress.replace('.', '_');
 		clientId = "mqttechoreceiver";
 		String tmpDir = System.getProperty("java.io.tmpdir");
@@ -43,10 +43,12 @@ public class MqttEchoReceiver {
 		connOpt.setCleanSession(true);
 		
 		client = new MqttClient(uri, clientId, dataStore);
+		
 		client.setCallback(new MqttCallback() {
 			@Override
 			public void connectionLost(Throwable cause) {
-				Logger.getLogger(MqttEchoReceiver.class.getName()).log(null, Level.SEVERE, null, cause);
+//				Logger.getLogger(MqttEchoReceiver.class.getName()).log(null, Level.SEVERE, null, cause);
+				System.out.println("Connection lost...");
 				System.exit(-1);
 			}
 
@@ -67,7 +69,7 @@ public class MqttEchoReceiver {
 										.add("clientId", clientInfo[0])
 										.add("message", msg.toString())
 										.build();
-				System.out.println("Publish a message: " + jsonObj.toString());
+				System.out.println("Publish a message '" + jsonObj.toString() + "' to " + clientInfo[0]);
 				publish(clientInfo[0], jsonObj.toString(), 1);
 			}
 		});
@@ -122,20 +124,31 @@ public class MqttEchoReceiver {
 	}
 	
 	public static void main(String[] args) {
+		Scanner scanner = null;
+		MqttEchoReceiver receiver = null;
+
 		try {
-			final MqttEchoReceiver receiver = new MqttEchoReceiver();
+			receiver = new MqttEchoReceiver();
+			receiver.subscribe();
 			
+/*			
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				@Override
 				public void run() {
 					receiver.close();
 				}
 			});
-			
-			receiver.subscribe();
+*/			
+			scanner = new Scanner(System.in);
+			System.out.println("Enter any key to quit ...");
+			scanner.nextLine();			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 //			Logger.getLogger(MqttEchoReceiver.class.getName()).log(null, Level.SEVERE, null, ex);
-		} 
+		} finally {
+			if (scanner != null)  scanner.close();
+			if (receiver != null)  receiver.close();
+		}
+		
 	}
 }
