@@ -1,21 +1,27 @@
 package com.example.app;
 
 import java.util.logging.Level;
-
-import org.jboss.logging.Logger;
+import java.util.logging.Logger;
 
 import com.example.mqtt.MqttConsoleHandler;
 import com.example.thing.ControlPoint;
 import com.example.thing.ControlPointContainer;
 
 public class MqttCliThingMain {
-
+	private static ControlPointContainer container = null;
+	private static MqttConsoleHandler console = null;
+	
+	public static void close() {
+		if (container != null)  container.stop();
+		if (console != null)  console.close();
+	}
+	
 	public static void main(String[] args) {
 		try {
-			final ControlPointContainer container = ControlPointContainer.getInstance();
+			container = ControlPointContainer.getInstance();
 			container.start();
 			
-			final MqttConsoleHandler console = new MqttConsoleHandler();
+			console = new MqttConsoleHandler();
 			for (ControlPoint cp : container.getControlPoints()) {
 				cp.addObserver(console);
 			}
@@ -23,8 +29,7 @@ public class MqttCliThingMain {
 			Thread hookThread = new Thread() {
 				public void run() {
 					System.out.println("Program is shutdowning...");
-					container.stop();
-					console.close();
+					close();
 				}
  			 };
 			
@@ -33,7 +38,7 @@ public class MqttCliThingMain {
 			 for(;;)
 				 Thread.sleep(1000);			 
 		} catch (Exception ex) {
-			Logger.getLogger(MqttCliThingMain.class.getName()).log(null, Level.SEVERE, null, ex);
+			Logger.getLogger(MqttCliThingMain.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 }

@@ -27,5 +27,10 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="src/main/resources/lib/activemq-client-5.15.2.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/geronimo-j2ee-management_1.1_spec-1.0.1.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/geronimo-jms_1.1_spec-1.1.1.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/slf4j-api-1.7.25.jar"/>
+	<classpathentry kind="lib" path="src/main/resources/lib/hawtbuf-1.11.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
