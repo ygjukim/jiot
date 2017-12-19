@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jardesc>
+    <jar path="JiotCliApp/src/main/resources/lib/jiot-raspi-thing.jar"/>
+    <options buildIfNeeded="true" compress="true" descriptionLocation="/JiotCliApp/jiot-raspi-thing.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
+    <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
+    <selectedProjects/>
+    <manifest generateManifest="true" manifestLocation="/JiotCliApp/jiot-raspi-thing.mf" manifestVersion="1.0" reuseManifest="false" saveManifest="true" usesManifest="true">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
+        <javaElement handleIdentifier="=JiotCliApp/src\/main\/java&lt;jiot.raspi.i2c_dev.drivers"/>
+        <javaElement handleIdentifier="=JiotCliApp/src\/main\/java&lt;jiot.raspi.cli"/>
+        <javaElement handleIdentifier="=JiotCliApp/src\/main\/java&lt;jiot.raspi.i2c_dev"/>
+        <javaElement handleIdentifier="=JiotCliApp/src\/main\/java&lt;jiot.raspi.thing"/>
+    </selectedElements>
+</jardesc>

@@ -37,6 +37,8 @@ public class MqttCliConsole {
         this.bdHandler = handler;
 
         url = System.getProperty("mqtt.server", "tcp://127.0.0.1:1883");
+//        url = System.getProperty("mqtt.server", "ws://127.0.0.1:61614");
+        System.out.println("MQTT Broker url: " + url);
         commandTopic = String.format(TOPIC_COMMAND, clientId, handlerId);
         resultTopic = String.format(TOPIC_RESULT, clientId);
         broadcastTopic = String.format(TOPIC_BROADCAST, handlerId);
